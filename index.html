@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    Quantidade de cavalos: <input type="text" id="input_quantidadeCavalos">
+    <br>
+    <button onclick="largada()">Largada</button>
+
+    <div id="div_mensagem"></div>
+
+
+</body>
+
+</html>
+
+<script>
+    var listaCorrida = []
+    // var cavalo = [];
+
+    function largada() {
+        var quantidadeCavalos = Number(input_quantidadeCavalos.value)
+        var mensagem = '';
+
+        for (var i = 0; i < 7; i++) {
+
+            listaVolta = []
+            
+            for (var j = 0; j < quantidadeCavalos; j++) {
+                // var cavalo = `Cavalo ${i+1}`
+                var tempoTotal = 0
+                
+                var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1))
+                tempoTotal += tempoAleatorio
+                listaVolta.push(tempoAleatorio);
+            }
+            
+            listaCorrida.push(listaVolta)
+            
+        }
+        exibirMensagem();
+    }
+
+    function exibirMensagem() {
+        var quantidadeCavalos = Number(input_quantidadeCavalos.value)
+
+        var mensagem = ''
+        for (var i = 0; i < listaCorrida.length; i++) {
+            mensagem += `<br> Volta: ${i + 1} <br> `
+
+            for (var j = 0; j < quantidadeCavalos; j++) {
+
+                mensagem += `Cavalo ${j + 1} – ${listaCorrida[i][j]} – yy,yy  `
+            }
+
+
+        }
+        div_mensagem.innerHTML = mensagem;
+    }
+
+</script>
