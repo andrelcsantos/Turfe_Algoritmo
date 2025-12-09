@@ -25,17 +25,14 @@
 
     function largada() {
         var quantidadeCavalos = Number(input_quantidadeCavalos.value)
-        var mensagem = '';
+        var tempoTotal = 0
+        var tempoAleatorio = 0;
+        var listaVolta = []
 
-        for (var i = 0; i < 7; i++) {
-
-            listaVolta = []
+        for (var i = 1; i <= 7; i++) {
             
-            for (var j = 0; j < quantidadeCavalos; j++) {
-                // var cavalo = `Cavalo ${i+1}`
-                var tempoTotal = 0
-                
-                var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1))
+            for (var j = 1; j <= quantidadeCavalos.length; j++) {
+                tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
                 tempoTotal += tempoAleatorio
                 listaVolta.push(tempoAleatorio);
             }
