@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div>
+      <h1>Adicione os integrantes da corrida</h1>
+      <select name="" id="">
+        <option value=""></option>
+      </select>
+      Quantidade de voltas: <input type="text" id="input_qunatidadeVoltas" />
+    </div>
+
+    Quantidade de cavalos: <input type="text" id="input_quantidadeCavalos" />
+    <br />
+
+    <button onclick="largada()">Largada</button>
+
+    <div id="div_mensagem"></div>
+    <div id="div_podio"></div>
+  </body>
+</html>
+
+<script>
+  var listaCorrida = [];
+  // var cavalo = [];
+  var listaTempoTotal = [];
+  function largada() {
+    var quantidadeCavalos = Number(input_quantidadeCavalos.value);
+    var quantidadeVoltas = Number(input_qunatidadeVoltas.value);
+    for (var i = 0; i < quantidadeCavalos; i++) {
+      listaTempoTotal.push(0);
+    }
+
+    var mensagem = "";
+    listaCorrida = [];
+
+    for (var i = 0; i < quantidadeVoltas; i++) {
+      listaVolta = [];
+
+      for (var j = 0; j < quantidadeCavalos; j++) {
+        // var cavalo = `Cavalo ${i+1}`
+        var tempoTotal = 0;
+
+        var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
+        tempoTotal += tempoAleatorio;
+        listaVolta.push(tempoAleatorio);
+        listaTempoTotal[j] += tempoAleatorio;
+      }
+
+      listaCorrida.push(listaVolta);
+    }
+    console.log("lista finalizada: ", listaTempoTotal);
+    exibirMensagem();
+  }
+
+  function exibirMensagem() {
+    var quantidadeCavalos = Number(input_quantidadeCavalos.value);
+
+    var mensagem = "";
+    for (var i = 0; i < listaCorrida.length; i++) {
+      mensagem += `<br> Volta: ${i + 1} <br> `;
+
+      for (var j = 0; j < quantidadeCavalos; j++) {
+        var soma = 0;
+        for (var k = 0; k <= i; k++) {
+          soma += listaCorrida[k][j];
+        }
+
+        mensagem += `Cavalo ${j + 1} – ${listaCorrida[i][j]} – ${soma.toFixed(
+          1
+        )} `;
+      }
+    }
+    div_mensagem.innerHTML = mensagem;
+    decidirPodio();
+  }
+  var primeiroColocado = 0;
+  function decidirPodio() {
+    var segundoColocado = 0;
+    var terceiroColocado = 0;
+    primeiroColocado = listaTempoTotal[0];
+    for (var i = 0; i < listaTempoTotal.length; i++) {
+      if (primeiroColocado > listaTempoTotal[i]) {
+        primeiroColocado = listaTempoTotal[i];
+      }
+    }
+    primeiroColocado = listaTempoTotal.indexOf(primeiroColocado);
+
+    segundoColocado = listaTempoTotal[0];
+
+    for (var i = 0; i < listaTempoTotal.length; i++) {
+      if (
+        segundoColocado > listaTempoTotal[i] &&
+        listaTempoTotal[i] >= listaTempoTotal[primeiroColocado] &&
+        i != primeiroColocado
+      ) {
+        segundoColocado = listaTempoTotal[i];
+      }
+    }
+
+    segundoColocado = listaTempoTotal.indexOf(segundoColocado);
+
+    terceiroColocado = listaTempoTotal[0];
+
+    for (var i = 0; i < listaTempoTotal.length; i++) {
+      if (
+        terceiroColocado > listaTempoTotal[i] &&
+        listaTempoTotal[i] >= listaTempoTotal[segundoColocado] &&
+        i != primeiroColocado &&
+        i != segundoColocado
+      ) {
+        terceiroColocado = listaTempoTotal[i];
+      }
+    }
+
+    terceiroColocado = listaTempoTotal.indexOf(terceiroColocado);
+
+    console.log(`primeiro lugar foi o cavalo ${primeiroColocado + 1}`);
+    console.log(`segundo lugar foi o cavalo ${segundoColocado + 1}`);
+    console.log(`terceiro lugar foi o cavalo ${terceiroColocado + 1}`);
+  }
+</script>
