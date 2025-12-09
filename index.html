@@ -5,21 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    Quantidade de cavalos: <input type="text" id="input_quantidadeCavalos">
-    <br>
-    <button onclick="largada()">Largada</button>
 
-    <div id="div_mensagem"></div>
+    <div id="jogo">
+        Quantidade de cavalos: <input type="text" id="input_quantidadeCavalos">
+        <br>
+        <button onclick="largada()">Largada</button>
 
+        <div id="div_mensagem"></div>
+    </div>
 
 </body>
 
 </html>
 
 <script>
+
     var listaCorrida = []
     // var cavalo = [];
 
@@ -30,15 +34,15 @@
         var listaVolta = []
 
         for (var i = 1; i <= 7; i++) {
-            
+
             for (var j = 1; j <= quantidadeCavalos.length; j++) {
                 tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
                 tempoTotal += tempoAleatorio
                 listaVolta.push(tempoAleatorio);
             }
-            
+
             listaCorrida.push(listaVolta)
-            
+
         }
         exibirMensagem();
     }
