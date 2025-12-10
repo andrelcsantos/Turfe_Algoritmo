@@ -25,10 +25,22 @@
   font-size: 60px;
 }
 
-#telaInicial button{
-    height: 40px;
-    width: 300px;
-    cursor: pointer;
-    font-size: 22px;
+#telaInicial button {
+  height: 40px;
+  width: 400px;
+  cursor: pointer;
+  font-size: 22px;
+  background-color: #707070;
+  border: black 2px solid;
+  color: white;
+  font-weight: 50;
+  text-shadow: 2px 2px 0px #3e3e3e;
+}
+#telaInicial button:hover {
+  background-color: #7d87bf;
+  color: #faf60cdf;
 }
 
+img {
+  height: 350px;
+}

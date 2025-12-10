@@ -4,66 +4,105 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <!-- <link rel="stylesheet" href="desafio.css" /> -->
   </head>
 
   <body>
-    <div>
-      <h1>Adicione os integrantes da corrida</h1>
-      <select name="" id="">
-        <option value=""></option>
-      </select>
-      Quantidade de voltas: <input type="text" id="input_qunatidadeVoltas" />
+    <div class="registros">
+      <div class="cadastrar-integrantes">
+        <h1>Adicione os integrantes da corrida</h1>
+        <select name="" id="select_mob">
+          <option value="cavalo">Cavalo</option>
+          <option value="porco">Porco</option>
+          <option value="axalote">Axalote</option>
+          <option value="hoglin">Hoglin</option>
+          <option value="ovelha">Ovelha</option>
+        </select>
+        <div>
+          <p>Nome do integrante:</p>
+          <input type="text" id="input_nome" />
+        </div>
+        <button onclick="cadastrar()">Cadastrar integrante</button>
+      </div>
+
+      <div class="participante">
+        <h1>Participantes da corrida</h1>
+        <div id="div_participantes"></div>
+      </div>
     </div>
-
-    Quantidade de cavalos: <input type="text" id="input_quantidadeCavalos" />
-    <br />
-
-    <button onclick="largada()">Largada</button>
-
+    <div>
+      <p>Quantidade de voltas:</p>
+      <input type="text" id="input_qunatidadeVoltas" />
+      <button onclick="largada()">Iniciar partida</button>
+    </div>
     <div id="div_mensagem"></div>
     <div id="div_podio"></div>
   </body>
 </html>
 
 <script>
+  var quantidadeCavalos = 0;
   var listaCorrida = [];
-  // var cavalo = [];
+
   var listaTempoTotal = [];
-  function largada() {
-    var quantidadeCavalos = Number(input_quantidadeCavalos.value);
-    var quantidadeVoltas = Number(input_qunatidadeVoltas.value);
-    for (var i = 0; i < quantidadeCavalos; i++) {
-      listaTempoTotal.push(0);
-    }
-
-    var mensagem = "";
-    listaCorrida = [];
-
-    for (var i = 0; i < quantidadeVoltas; i++) {
-      listaVolta = [];
-
-      for (var j = 0; j < quantidadeCavalos; j++) {
-        // var cavalo = `Cavalo ${i+1}`
-        var tempoTotal = 0;
-
-        var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
-        tempoTotal += tempoAleatorio;
-        listaVolta.push(tempoAleatorio);
-        listaTempoTotal[j] += tempoAleatorio;
+  var listaParticipante = [];
+  var contadorNome = 0;
+  function cadastrar() {
+    var mob = select_mob.value;
+    var nome = input_nome.value.toLowerCase().trim();
+    contadorNome = 0;
+    for (var i = 0; i < listaParticipante.length; i++) {
+      if (listaParticipante[i][1] == nome) {
+        contadorNome++;
       }
-
-      listaCorrida.push(listaVolta);
     }
-    console.log("lista finalizada: ", listaTempoTotal);
-    exibirMensagem();
+    if (contadorNome == 0) {
+      div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br>`;
+      quantidadeCavalos++;
+      listaParticipante.push([mob, nome]);
+    } else {
+      alert("Ja existe um participante com o mesmo nome!");
+    }
+  }
+  function largada() {
+    if (quantidadeCavalos >= 3) {
+      var quantidadeVoltas = Number(input_qunatidadeVoltas.value);
+      if (quantidadeVoltas > 0) {
+        for (var i = 0; i < quantidadeCavalos; i++) {
+          listaTempoTotal.push(0);
+        }
+
+        var mensagem = "";
+        listaCorrida = [];
+
+        for (var i = 0; i < quantidadeVoltas; i++) {
+          listaVolta = [];
+
+          for (var j = 0; j < quantidadeCavalos; j++) {
+            var tempoTotal = 0;
+
+            var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
+            tempoTotal += tempoAleatorio;
+            listaVolta.push(tempoAleatorio);
+            listaTempoTotal[j] += tempoAleatorio;
+          }
+
+          listaCorrida.push(listaVolta);
+        }
+        console.log("lista finalizada: ", listaTempoTotal);
+        exibirMensagem();
+      } else {
+        alert("A quantidade de voltas precisa ser maior que 0");
+      }
+    } else {
+      alert("precisa de 3 ou mais participantes");
+    }
   }
 
   function exibirMensagem() {
-    var quantidadeCavalos = Number(input_quantidadeCavalos.value);
-
     var mensagem = "";
     for (var i = 0; i < listaCorrida.length; i++) {
-      mensagem += `<br> Volta: ${i + 1} <br> `;
+      mensagem += `<br><br> Volta: ${i + 1} <br> `;
 
       for (var j = 0; j < quantidadeCavalos; j++) {
         var soma = 0;
@@ -71,19 +110,20 @@
           soma += listaCorrida[k][j];
         }
 
-        mensagem += `Cavalo ${j + 1} – ${listaCorrida[i][j]} – ${soma.toFixed(
-          1
-        )} `;
+        mensagem += `${listaParticipante[j][1]} – ${
+          listaCorrida[i][j]
+        } – ${soma.toFixed(1)} `;
       }
     }
     div_mensagem.innerHTML = mensagem;
     decidirPodio();
   }
   var primeiroColocado = 0;
+  var segundoColocado = 0;
+  var terceiroColocado = 0;
   function decidirPodio() {
-    var segundoColocado = 0;
-    var terceiroColocado = 0;
     primeiroColocado = listaTempoTotal[0];
+
     for (var i = 0; i < listaTempoTotal.length; i++) {
       if (primeiroColocado > listaTempoTotal[i]) {
         primeiroColocado = listaTempoTotal[i];
@@ -91,7 +131,7 @@
     }
     primeiroColocado = listaTempoTotal.indexOf(primeiroColocado);
 
-    segundoColocado = listaTempoTotal[0];
+    segundoColocado = 10000000;
 
     for (var i = 0; i < listaTempoTotal.length; i++) {
       if (
@@ -105,12 +145,13 @@
 
     segundoColocado = listaTempoTotal.indexOf(segundoColocado);
 
-    terceiroColocado = listaTempoTotal[0];
+    terceiroColocado = 10000000;
 
     for (var i = 0; i < listaTempoTotal.length; i++) {
       if (
         terceiroColocado > listaTempoTotal[i] &&
         listaTempoTotal[i] >= listaTempoTotal[segundoColocado] &&
+        listaTempoTotal[i] >= listaTempoTotal[primeiroColocado] &&
         i != primeiroColocado &&
         i != segundoColocado
       ) {
@@ -120,8 +161,15 @@
 
     terceiroColocado = listaTempoTotal.indexOf(terceiroColocado);
 
-    console.log(`primeiro lugar foi o cavalo ${primeiroColocado + 1}`);
-    console.log(`segundo lugar foi o cavalo ${segundoColocado + 1}`);
-    console.log(`terceiro lugar foi o cavalo ${terceiroColocado + 1}`);
+    console.log(
+      `primeiro lugar foi o ${listaParticipante[primeiroColocado][0]} ${listaParticipante[primeiroColocado][1]}`
+    );
+    console.log(
+      `segundo lugar foi o ${listaParticipante[segundoColocado][0]} ${listaParticipante[segundoColocado][1]}`
+    );
+    console.log(
+      `terceiro lugar foi o ${listaParticipante[terceiroColocado][0]} ${listaParticipante[terceiroColocado][1]}`
+    );
+    div_podio.innerHTML = `Primeiro lugar foi o ${listaParticipante[primeiroColocado][0]} ${listaParticipante[primeiroColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[primeiroColocado][0]}.png" alt=""><br>Segundo lugar foi o ${listaParticipante[segundoColocado][0]} ${listaParticipante[segundoColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[segundoColocado][0]}.png" alt=""><br>Terceiro lugar foi o ${listaParticipante[terceiroColocado][0]} ${listaParticipante[terceiroColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[terceiroColocado][0]}.png" alt=""><br>`;
   }
 </script>
