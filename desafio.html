@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <!-- <link rel="stylesheet" href="desafio.css" /> -->
+    <link rel="stylesheet" href="desafio.css" />
   </head>
 
   <body>
@@ -42,92 +42,111 @@
 
 <script>
   var quantidadeCavalos = 0;
-  var listaCorrida = [];
-
-  var listaTempoTotal = [];
+  
   var listaParticipante = [];
-  var contadorNome = 0;
+  var listaCorrida = [];
+  var listaTempoTotal = [];
+
+
   function cadastrar() {
     var mob = select_mob.value;
     var nome = input_nome.value.toLowerCase().trim();
     contadorNome = 0;
-    for (var i = 0; i < listaParticipante.length; i++) {
-      if (listaParticipante[i][1] == nome) {
-        contadorNome++;
+
+
+    if(listaParticipante.includes(nome) || listaParticipante.length == 6) {
+      if(listaParticipante.includes(nome)) {
+        alert("Ja existe um participante com o mesmo nome!");
+      } else {
+        alert("Só pode ter no máximo 6 participantes")
       }
-    }
-    if (contadorNome == 0) {
-      div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br>`;
-      quantidadeCavalos++;
-      listaParticipante.push([mob, nome]);
     } else {
-      alert("Ja existe um participante com o mesmo nome!");
+      div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br>`;
+      listaParticipante.push(nome);
+      quantidadeCavalos++;
     }
+    // for (var i = 0; i < listaParticipante.length; i++) {
+    //   if (listaParticipante[i][1] == nome) {
+    //     contadorNome++;
+    //   }
+    // }
+    // if (contadorNome == 0) {
+    //   div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br>`;
+    //   quantidadeCavalos++;
+    // } 
   }
+
+
   function largada() {
-    if (quantidadeCavalos >= 3) {
-      var quantidadeVoltas = Number(input_qunatidadeVoltas.value);
-      if (quantidadeVoltas > 0) {
+    var quantidadeVoltas = Number(input_qunatidadeVoltas.value);
+
+    if (quantidadeCavalos >= 2 && quantidadeVoltas > 0) {  
+
+      listaCorrida = [];
+      listaTempoTotal = [];
+
         for (var i = 0; i < quantidadeCavalos; i++) {
-          listaTempoTotal.push(0);
+          listaTempoTotal[i] = 0;
         }
 
-        var mensagem = "";
-        listaCorrida = [];
+          for (var i = 0; i < quantidadeVoltas; i++) {
+            var listaVolta = [];
 
-        for (var i = 0; i < quantidadeVoltas; i++) {
-          listaVolta = [];
+            for(var j = 0; j < quantidadeCavalos; j++){
+              var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
 
-          for (var j = 0; j < quantidadeCavalos; j++) {
-            var tempoTotal = 0;
-
-            var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
-            tempoTotal += tempoAleatorio;
-            listaVolta.push(tempoAleatorio);
-            listaTempoTotal[j] += tempoAleatorio;
-          }
+              listaVolta[j] = tempoAleatorio;
+              listaTempoTotal[j] += tempoAleatorio;
+            }
 
           listaCorrida.push(listaVolta);
+
         }
-        console.log("lista finalizada: ", listaTempoTotal);
+
         exibirMensagem();
+
       } else {
-        alert("A quantidade de voltas precisa ser maior que 0");
+        if(quantidadeCavalos < 2){
+          div_mensagem.innerHTML = "Precisa de 2 ou mais participantes"
+        } else {
+        div_mensagem.innerHTML = "A quantidade de voltas precisa ser maior que 0";
       }
-    } else {
-      alert("precisa de 3 ou mais participantes");
     }
-  }
+
 
   function exibirMensagem() {
     var mensagem = "";
+
     for (var i = 0; i < listaCorrida.length; i++) {
       mensagem += `<br><br> Volta: ${i + 1} <br> `;
 
       for (var j = 0; j < quantidadeCavalos; j++) {
+        var tempoVolta = listaCorrida[i][j];
         var soma = 0;
+
         for (var k = 0; k <= i; k++) {
           soma += listaCorrida[k][j];
         }
 
-        mensagem += `${listaParticipante[j][1]} – ${
-          listaCorrida[i][j]
-        } – ${soma.toFixed(1)} `;
+        mensagem += `${listaParticipante[j]} – ${tempoVolta} – Total: ${soma.toFixed(1)}<br>`;
       }
     }
     div_mensagem.innerHTML = mensagem;
+
     decidirPodio();
   }
-  var primeiroColocado = 0;
-  var segundoColocado = 0;
-  var terceiroColocado = 0;
-  function decidirPodio() {
-    primeiroColocado = listaTempoTotal[0];
 
-    for (var i = 0; i < listaTempoTotal.length; i++) {
-      if (primeiroColocado > listaTempoTotal[i]) {
-        primeiroColocado = listaTempoTotal[i];
-      }
+
+  function decidirPodio() {
+      var primeiroColocado = 0;
+      var segundoColocado = 0;
+      var terceiroColocado = 0;
+
+
+    for (var i = 1; i < listaTempoTotal.length; i++) {
+      if (listaTempoTotal[i] < listaTempoTotal[primeiro]) {
+      primeiro = i;
+    }
     }
     primeiroColocado = listaTempoTotal.indexOf(primeiroColocado);
 
@@ -152,8 +171,7 @@
         terceiroColocado > listaTempoTotal[i] &&
         listaTempoTotal[i] >= listaTempoTotal[segundoColocado] &&
         listaTempoTotal[i] >= listaTempoTotal[primeiroColocado] &&
-        i != primeiroColocado &&
-        i != segundoColocado
+        i != primeiroColocado && i != segundoColocado
       ) {
         terceiroColocado = listaTempoTotal[i];
       }
@@ -171,5 +189,6 @@
       `terceiro lugar foi o ${listaParticipante[terceiroColocado][0]} ${listaParticipante[terceiroColocado][1]}`
     );
     div_podio.innerHTML = `Primeiro lugar foi o ${listaParticipante[primeiroColocado][0]} ${listaParticipante[primeiroColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[primeiroColocado][0]}.png" alt=""><br>Segundo lugar foi o ${listaParticipante[segundoColocado][0]} ${listaParticipante[segundoColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[segundoColocado][0]}.png" alt=""><br>Terceiro lugar foi o ${listaParticipante[terceiroColocado][0]} ${listaParticipante[terceiroColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[terceiroColocado][0]}.png" alt=""><br>`;
+  }
   }
 </script>

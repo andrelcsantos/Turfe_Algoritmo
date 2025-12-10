@@ -8,7 +8,11 @@
   </head>
   <body>
     <div id="telaInicial">
-      <!-- <h1>TURFE AMIGO</h1> -->
+      
+      <video autoplay muted loop id="videoFundo">
+        <source src="videos/TelaDeCarregamento.mp4" type="video/mp4">
+      </video>
+
       <img src="images/Minecraft-Logo.png" alt="" />
 
       <button onclick="iniciarJogo()">Jogar turfe</button>
@@ -17,6 +21,7 @@
 </html>
 
 <script>
+
   function iniciarJogo() {
     window.location.href = "desafio.html";
   }

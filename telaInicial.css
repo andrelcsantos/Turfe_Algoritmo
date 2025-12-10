@@ -9,21 +9,22 @@
   font-style: normal;
 }
 
-#telaInicial {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-image: url(./assets/fundo\ minecraft.webp);
-  background-position: center;
-  background-size: cover;
-}
 
 #telaInicial h1 {
   padding-bottom: 100px;
   font-size: 60px;
 }
+
+#telaInicial {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
 
 #telaInicial button {
   height: 40px;
@@ -36,6 +37,19 @@
   font-weight: 50;
   text-shadow: 2px 2px 0px #3e3e3e;
 }
+
+
+
+#videoFundo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1; /* fica atrás de tudo */
+}
+
 #telaInicial button:hover {
   background-color: #7d87bf;
   color: #faf60cdf;
@@ -44,3 +58,4 @@
 img {
   height: 350px;
 }
+
