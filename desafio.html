@@ -142,53 +142,42 @@
       var segundoColocado = 0;
       var terceiroColocado = 0;
 
-
-    for (var i = 1; i < listaTempoTotal.length; i++) {
-      if (listaTempoTotal[i] < listaTempoTotal[primeiro]) {
-      primeiro = i;
+  for (var i = 1; i < listaTempoTotal.length; i++) {
+    if (listaTempoTotal[i] < listaTempoTotal[primeiroColocado]) {
+      primeiroColocado = i;
     }
-    }
-    primeiroColocado = listaTempoTotal.indexOf(primeiroColocado);
-
-    segundoColocado = 10000000;
-
-    for (var i = 0; i < listaTempoTotal.length; i++) {
-      if (
-        segundoColocado > listaTempoTotal[i] &&
-        listaTempoTotal[i] >= listaTempoTotal[primeiroColocado] &&
-        i != primeiroColocado
-      ) {
-        segundoColocado = listaTempoTotal[i];
-      }
-    }
-
-    segundoColocado = listaTempoTotal.indexOf(segundoColocado);
-
-    terceiroColocado = 10000000;
-
-    for (var i = 0; i < listaTempoTotal.length; i++) {
-      if (
-        terceiroColocado > listaTempoTotal[i] &&
-        listaTempoTotal[i] >= listaTempoTotal[segundoColocado] &&
-        listaTempoTotal[i] >= listaTempoTotal[primeiroColocado] &&
-        i != primeiroColocado && i != segundoColocado
-      ) {
-        terceiroColocado = listaTempoTotal[i];
-      }
-    }
-
-    terceiroColocado = listaTempoTotal.indexOf(terceiroColocado);
-
-    console.log(
-      `primeiro lugar foi o ${listaParticipante[primeiroColocado][0]} ${listaParticipante[primeiroColocado][1]}`
-    );
-    console.log(
-      `segundo lugar foi o ${listaParticipante[segundoColocado][0]} ${listaParticipante[segundoColocado][1]}`
-    );
-    console.log(
-      `terceiro lugar foi o ${listaParticipante[terceiroColocado][0]} ${listaParticipante[terceiroColocado][1]}`
-    );
-    div_podio.innerHTML = `Primeiro lugar foi o ${listaParticipante[primeiroColocado][0]} ${listaParticipante[primeiroColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[primeiroColocado][0]}.png" alt=""><br>Segundo lugar foi o ${listaParticipante[segundoColocado][0]} ${listaParticipante[segundoColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[segundoColocado][0]}.png" alt=""><br>Terceiro lugar foi o ${listaParticipante[terceiroColocado][0]} ${listaParticipante[terceiroColocado][1]}<br><img style="height: 150px" src="images/${listaParticipante[terceiroColocado][0]}.png" alt=""><br>`;
   }
+
+  var menorSegundo = 10000000;
+  for (var i = 0; i < listaTempoTotal.length; i++) {
+    if (
+      listaTempoTotal[i] < menorSegundo &&
+      i != primeiroColocado
+    ) {
+      menorSegundo = listaTempoTotal[i];
+      segundoColocado = i;
+    }
+  }
+
+  var menorTerceiro = 10000000;
+  for (var i = 0; i < listaTempoTotal.length; i++) {
+    if (
+      listaTempoTotal[i] < menorTerceiro &&
+      i != primeiroColocado &&
+      i != segundoColocado
+    ) {
+      menorTerceiro = listaTempoTotal[i];
+      terceiroColocado = i;
+    }
+  }
+
+    div_podio.innerHTML =
+    `Primeiro lugar foi o ${listaParticipante[primeiroColocado]}<br>` +
+    `<img style="height: 150px" src="images/${select_mob.value}.png"><br>` +
+    `Segundo lugar foi o ${listaParticipante[segundoColocado]}<br>` +
+    `<img style="height: 150px" src="images/${select_mob.value}.png"><br>` +
+    `Terceiro lugar foi o ${listaParticipante[terceiroColocado]}<br>` +
+    `<img style="height: 150px" src="images/${select_mob.value}.png"><br>`;
+    }
   }
 </script>
