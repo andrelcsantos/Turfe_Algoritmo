@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="desafio.css" />
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="desafio.css" />
+</head>
+
+<body>
+  <div id="campos1">
     <div class="registros">
       <div class="cadastrar-integrantes">
         <h1>Adicione os integrantes da corrida</h1>
@@ -21,29 +23,32 @@
         <div>
           <p>Nome do integrante:</p>
           <input type="text" id="input_nome" />
+          <button onclick="cadastrar()">Cadastrar integrante</button>
         </div>
-        <button onclick="cadastrar()">Cadastrar integrante</button>
+
       </div>
 
       <div class="participante">
         <h1>Participantes da corrida</h1>
       </div>
     </div>
-    <div>
+    <div id="qtdVoltas">
       <p>Quantidade de voltas:</p>
-      <input type="number" id="input_qunatidadeVoltas" /> <br>
+      <input type="number" id="input_qunatidadeVoltas" />
       <button onclick="largada()">Iniciar partida</button>
     </div>
-    <br>
-    <div class="participante" id="div_participantes"></div>
-    <div id="div_podio"></div>
-    <div id="div_mensagem"></div>
-  </body>
+  </div>
+  <br>
+  <div class="participante" id="div_participantes"></div>
+  <div id="div_podio"></div>
+  <div id="div_mensagem"></div>
+</body>
+
 </html>
 
 <script>
   var quantidadeCavalos = 0;
-  
+
   var listaParticipante = [];
   var listaCorrida = [];
   var listaTempoTotal = [];
@@ -54,7 +59,7 @@
     var nome = input_nome.value.toLowerCase().trim();
     var existe = false;
 
-    for(var i = 0; i < listaParticipante.length; i++) {
+    for (var i = 0; i < listaParticipante.length; i++) {
       if (listaParticipante[i][0] == nome) {
         existe = true;
         break
@@ -62,10 +67,10 @@
     }
 
 
-    if(existe || listaParticipante.length == 6 || nome == '') {
-      if(existe) {
+    if (existe || listaParticipante.length == 6 || nome == '') {
+      if (existe) {
         alert("Ja existe um participante com o mesmo nome!");
-      } else if (listaParticipante.length == 6){
+      } else if (listaParticipante.length == 6) {
         alert("Só pode ter no máximo 6 participantes")
       } else {
         alert("É preciso inserir um nome no competidor")
@@ -81,129 +86,129 @@
   function largada() {
     var quantidadeVoltas = Number(input_qunatidadeVoltas.value);
 
-    if (quantidadeCavalos >= 2 && quantidadeVoltas > 0) {  
+    if (quantidadeCavalos >= 2 && quantidadeVoltas > 0) {
 
       listaCorrida = [];
       listaTempoTotal = [];
 
-        for (var i = 0; i < quantidadeCavalos; i++) {
-          listaTempoTotal[i] = 0;
+      for (var i = 0; i < quantidadeCavalos; i++) {
+        listaTempoTotal[i] = 0;
+      }
+
+      for (var i = 0; i < quantidadeVoltas; i++) {
+        var listaVolta = [];
+
+        for (var j = 0; j < quantidadeCavalos; j++) {
+          var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
+
+          listaVolta[j] = tempoAleatorio;
+          listaTempoTotal[j] += tempoAleatorio;
         }
 
-          for (var i = 0; i < quantidadeVoltas; i++) {
-            var listaVolta = [];
+        listaCorrida.push(listaVolta);
 
-            for(var j = 0; j < quantidadeCavalos; j++){
-              var tempoAleatorio = Number((Math.random() * 2 + 7).toFixed(1));
+      }
 
-              listaVolta[j] = tempoAleatorio;
-              listaTempoTotal[j] += tempoAleatorio;
-            }
+      exibirMensagem();
 
-          listaCorrida.push(listaVolta);
-
-        }
-
-        exibirMensagem();
-
+    } else {
+      if (quantidadeCavalos < 2) {
+        div_mensagem.innerHTML = "Precisa de 2 ou mais participantes"
       } else {
-        if(quantidadeCavalos < 2){
-          div_mensagem.innerHTML = "Precisa de 2 ou mais participantes"
-        } else {
         div_mensagem.innerHTML = "A quantidade de voltas precisa ser maior que 0";
       }
     }
 
 
-  function exibirMensagem() {
-    
-    var mensagem = "";
+    function exibirMensagem() {
 
-    for (var i = 0; i < listaCorrida.length; i++) {
-      mensagem += `<br><br> Volta: ${i + 1} <br><br> `;
+      var mensagem = "";
 
-      for (var j = 0; j < quantidadeCavalos; j++) {
-        var tempoVolta = listaCorrida[i][j];
-        var soma = 0;
+      for (var i = 0; i < listaCorrida.length; i++) {
+        mensagem += `<br><br> Volta: ${i + 1} <br><br> `;
 
-        for (var k = 0; k <= i; k++) {
-          soma += listaCorrida[k][j];
+        for (var j = 0; j < quantidadeCavalos; j++) {
+          var tempoVolta = listaCorrida[i][j];
+          var soma = 0;
+
+          for (var k = 0; k <= i; k++) {
+            soma += listaCorrida[k][j];
+          }
+
+          mensagem += `${listaParticipante[j][0]} <br> Tempo: ${tempoVolta} – Total: ${soma.toFixed(1)}<br><br>`;
         }
-
-        mensagem += `${listaParticipante[j][0]} <br> Tempo: ${tempoVolta} – Total: ${soma.toFixed(1)}<br><br>`;
       }
-    }
-    document.body.innerHTML = `
+      document.body.innerHTML = `
     <a href="desafio.html">
       <button>Jogar novamente</button>
     </a>
     <div id="div_podio"></div>
     <div id="div_mensagem"></div>
     `
-    div_mensagem.innerHTML = mensagem;
+      div_mensagem.innerHTML = mensagem;
 
-    decidirPodio();
-  }
+      decidirPodio();
+    }
 
 
-  function decidirPodio() {
+    function decidirPodio() {
       var primeiroColocado = 0;
       var segundoColocado = 0;
       var terceiroColocado = 0;
-      
+
       var tempoPrimeiro = listaTempoTotal[0];
       var tempoSegundo = 0;
       var tempoTerceiro = 0;
 
       for (var i = 1; i < listaTempoTotal.length; i++) {
         if (listaTempoTotal[i] < tempoPrimeiro) {
-            tempoPrimeiro = listaTempoTotal[i].toFixed(1);
-            primeiroColocado = i;
+          tempoPrimeiro = listaTempoTotal[i].toFixed(1);
+          primeiroColocado = i;
         }
-    }
+      }
 
-  var menorSegundo = 10000000;
-  for (var i = 0; i < listaTempoTotal.length; i++) {
-    if (
-      listaTempoTotal[i] < menorSegundo &&
-      i != primeiroColocado
-    ) {
-      menorSegundo = listaTempoTotal[i];
-      segundoColocado = i;
-      tempoSegundo = listaTempoTotal[i].toFixed(1);
-    }
-  }
+      var menorSegundo = 10000000;
+      for (var i = 0; i < listaTempoTotal.length; i++) {
+        if (
+          listaTempoTotal[i] < menorSegundo &&
+          i != primeiroColocado
+        ) {
+          menorSegundo = listaTempoTotal[i];
+          segundoColocado = i;
+          tempoSegundo = listaTempoTotal[i].toFixed(1);
+        }
+      }
 
-  var menorTerceiro = 10000000;
-  if(listaParticipante.length >= 3) {
-  for (var i = 0; i < listaTempoTotal.length; i++) {
-    if (
-      listaTempoTotal[i] < menorTerceiro &&
-      i != primeiroColocado &&
-      i != segundoColocado
-    ) {
-      menorTerceiro = listaTempoTotal[i];
-      terceiroColocado = i;
-      tempoTerceiro = listaTempoTotal[i].toFixed(1);
-    }
-  }
-}
+      var menorTerceiro = 10000000;
+      if (listaParticipante.length >= 3) {
+        for (var i = 0; i < listaTempoTotal.length; i++) {
+          if (
+            listaTempoTotal[i] < menorTerceiro &&
+            i != primeiroColocado &&
+            i != segundoColocado
+          ) {
+            menorTerceiro = listaTempoTotal[i];
+            terceiroColocado = i;
+            tempoTerceiro = listaTempoTotal[i].toFixed(1);
+          }
+        }
+      }
 
-if(listaParticipante.length >= 3) {
-    div_podio.innerHTML =
-    `<br>Primeiro lugar foi: ${listaParticipante[primeiroColocado][0]} com o tempo de: ${tempoPrimeiro}<br>` +
-    `<img style="height: 150px" src="images/${listaParticipante[primeiroColocado][1]}.png"><br><br>` +
-    `Segundo lugar foi: ${listaParticipante[segundoColocado][0]} com o tempo de: ${tempoSegundo}<br>` +
-    `<img style="height: 150px" src="images/${listaParticipante[segundoColocado][1]}.png"><br><br>` +
-    `Terceiro lugar foi: ${listaParticipante[terceiroColocado][0]} com o tempo de: ${tempoTerceiro}<br>` +
-    `<img style="height: 150px" src="images/${listaParticipante[terceiroColocado][1]}.png"><br><br>`;
-} else {
-  div_podio.innerHTML =
-    `<br>Primeiro lugar foi: ${listaParticipante[primeiroColocado][0]} com o tempo de: ${tempoPrimeiro}<br>` +
-    `<img style="height: 150px" src="images/${listaParticipante[primeiroColocado][1]}.png"><br><br>` +
-    `Segundo lugar foi: ${listaParticipante[segundoColocado][0]} com o tempo de: ${tempoSegundo}<br>` +
-    `<img style="height: 150px" src="images/${listaParticipante[segundoColocado][1]}.png"><br><br>`
-  }
-}
+      if (listaParticipante.length >= 3) {
+        div_podio.innerHTML =
+          `<br>Primeiro lugar foi: ${listaParticipante[primeiroColocado][0]} com o tempo de: ${tempoPrimeiro}<br>` +
+          `<img style="height: 150px" src="images/${listaParticipante[primeiroColocado][1]}.png"><br><br>` +
+          `Segundo lugar foi: ${listaParticipante[segundoColocado][0]} com o tempo de: ${tempoSegundo}<br>` +
+          `<img style="height: 150px" src="images/${listaParticipante[segundoColocado][1]}.png"><br><br>` +
+          `Terceiro lugar foi: ${listaParticipante[terceiroColocado][0]} com o tempo de: ${tempoTerceiro}<br>` +
+          `<img style="height: 150px" src="images/${listaParticipante[terceiroColocado][1]}.png"><br><br>`;
+      } else {
+        div_podio.innerHTML =
+          `<br>Primeiro lugar foi: ${listaParticipante[primeiroColocado][0]} com o tempo de: ${tempoPrimeiro}<br>` +
+          `<img style="height: 150px" src="images/${listaParticipante[primeiroColocado][1]}.png"><br><br>` +
+          `Segundo lugar foi: ${listaParticipante[segundoColocado][0]} com o tempo de: ${tempoSegundo}<br>` +
+          `<img style="height: 150px" src="images/${listaParticipante[segundoColocado][1]}.png"><br><br>`
+      }
+    }
   }
 </script>
