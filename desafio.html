@@ -27,16 +27,17 @@
 
       <div class="participante">
         <h1>Participantes da corrida</h1>
-        <div id="div_participantes"></div>
       </div>
     </div>
     <div>
       <p>Quantidade de voltas:</p>
-      <input type="text" id="input_qunatidadeVoltas" />
+      <input type="number" id="input_qunatidadeVoltas" /> <br>
       <button onclick="largada()">Iniciar partida</button>
     </div>
-    <div id="div_mensagem"></div>
+    <br>
+    <div class="participante" id="div_participantes"></div>
     <div id="div_podio"></div>
+    <div id="div_mensagem"></div>
   </body>
 </html>
 
@@ -51,29 +52,29 @@
   function cadastrar() {
     var mob = select_mob.value;
     var nome = input_nome.value.toLowerCase().trim();
-    contadorNome = 0;
+    var existe = false;
+
+    for(var i = 0; i < listaParticipante.length; i++) {
+      if (listaParticipante[i][0] == nome) {
+        existe = true;
+        break
+      }
+    }
 
 
-    if(listaParticipante.includes(nome) || listaParticipante.length == 6) {
-      if(listaParticipante.includes(nome)) {
+    if(existe || listaParticipante.length == 6 || nome == '') {
+      if(existe) {
         alert("Ja existe um participante com o mesmo nome!");
-      } else {
+      } else if (listaParticipante.length == 6){
         alert("Só pode ter no máximo 6 participantes")
+      } else {
+        alert("É preciso inserir um nome no competidor")
       }
     } else {
-      div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br>`;
-      listaParticipante.push(nome);
+      div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br><br><br>`;
+      listaParticipante.push([nome, mob]);
       quantidadeCavalos++;
     }
-    // for (var i = 0; i < listaParticipante.length; i++) {
-    //   if (listaParticipante[i][1] == nome) {
-    //     contadorNome++;
-    //   }
-    // }
-    // if (contadorNome == 0) {
-    //   div_participantes.innerHTML += `<img style="height: 150px" src="images/${mob}.png" alt=""><br>${nome}<br>`;
-    //   quantidadeCavalos++;
-    // } 
   }
 
 
@@ -115,10 +116,11 @@
 
 
   function exibirMensagem() {
+    
     var mensagem = "";
 
     for (var i = 0; i < listaCorrida.length; i++) {
-      mensagem += `<br><br> Volta: ${i + 1} <br> `;
+      mensagem += `<br><br> Volta: ${i + 1} <br><br> `;
 
       for (var j = 0; j < quantidadeCavalos; j++) {
         var tempoVolta = listaCorrida[i][j];
@@ -128,9 +130,16 @@
           soma += listaCorrida[k][j];
         }
 
-        mensagem += `${listaParticipante[j]} – ${tempoVolta} – Total: ${soma.toFixed(1)}<br>`;
+        mensagem += `${listaParticipante[j][0]} <br> Tempo: ${tempoVolta} – Total: ${soma.toFixed(1)}<br><br>`;
       }
     }
+    document.body.innerHTML = `
+    <a href="desafio.html">
+      <button>Jogar novamente</button>
+    </a>
+    <div id="div_podio"></div>
+    <div id="div_mensagem"></div>
+    `
     div_mensagem.innerHTML = mensagem;
 
     decidirPodio();
@@ -141,12 +150,17 @@
       var primeiroColocado = 0;
       var segundoColocado = 0;
       var terceiroColocado = 0;
+      
+      var tempoPrimeiro = listaTempoTotal[0];
+      var tempoSegundo = 0;
+      var tempoTerceiro = 0;
 
-  for (var i = 1; i < listaTempoTotal.length; i++) {
-    if (listaTempoTotal[i] < listaTempoTotal[primeiroColocado]) {
-      primeiroColocado = i;
+      for (var i = 1; i < listaTempoTotal.length; i++) {
+        if (listaTempoTotal[i] < tempoPrimeiro) {
+            tempoPrimeiro = listaTempoTotal[i].toFixed(1);
+            primeiroColocado = i;
+        }
     }
-  }
 
   var menorSegundo = 10000000;
   for (var i = 0; i < listaTempoTotal.length; i++) {
@@ -156,10 +170,12 @@
     ) {
       menorSegundo = listaTempoTotal[i];
       segundoColocado = i;
+      tempoSegundo = listaTempoTotal[i].toFixed(1);
     }
   }
 
   var menorTerceiro = 10000000;
+  if(listaParticipante.length >= 3) {
   for (var i = 0; i < listaTempoTotal.length; i++) {
     if (
       listaTempoTotal[i] < menorTerceiro &&
@@ -168,16 +184,26 @@
     ) {
       menorTerceiro = listaTempoTotal[i];
       terceiroColocado = i;
+      tempoTerceiro = listaTempoTotal[i].toFixed(1);
     }
   }
+}
 
+if(listaParticipante.length >= 3) {
     div_podio.innerHTML =
-    `Primeiro lugar foi o ${listaParticipante[primeiroColocado]}<br>` +
-    `<img style="height: 150px" src="images/${select_mob.value}.png"><br>` +
-    `Segundo lugar foi o ${listaParticipante[segundoColocado]}<br>` +
-    `<img style="height: 150px" src="images/${select_mob.value}.png"><br>` +
-    `Terceiro lugar foi o ${listaParticipante[terceiroColocado]}<br>` +
-    `<img style="height: 150px" src="images/${select_mob.value}.png"><br>`;
-    }
+    `<br>Primeiro lugar foi: ${listaParticipante[primeiroColocado][0]} com o tempo de: ${tempoPrimeiro}<br>` +
+    `<img style="height: 150px" src="images/${listaParticipante[primeiroColocado][1]}.png"><br><br>` +
+    `Segundo lugar foi: ${listaParticipante[segundoColocado][0]} com o tempo de: ${tempoSegundo}<br>` +
+    `<img style="height: 150px" src="images/${listaParticipante[segundoColocado][1]}.png"><br><br>` +
+    `Terceiro lugar foi: ${listaParticipante[terceiroColocado][0]} com o tempo de: ${tempoTerceiro}<br>` +
+    `<img style="height: 150px" src="images/${listaParticipante[terceiroColocado][1]}.png"><br><br>`;
+} else {
+  div_podio.innerHTML =
+    `<br>Primeiro lugar foi: ${listaParticipante[primeiroColocado][0]} com o tempo de: ${tempoPrimeiro}<br>` +
+    `<img style="height: 150px" src="images/${listaParticipante[primeiroColocado][1]}.png"><br><br>` +
+    `Segundo lugar foi: ${listaParticipante[segundoColocado][0]} com o tempo de: ${tempoSegundo}<br>` +
+    `<img style="height: 150px" src="images/${listaParticipante[segundoColocado][1]}.png"><br><br>`
+  }
+}
   }
 </script>
